@@ -20,8 +20,81 @@ namespace EJ_1
             btnBuscar.Enabled = false;
         }
 
+        #region Variables de instancia
         static int[] numeros = new int[10];
         static int indice = 0;
+        #endregion
+
+        #region Metodos de clase
+        private int BusqSecuencial(int nroBuscado)
+        {
+            int pos = -1, n = 0;
+            while (pos == -1 && n < indice)
+            {
+                if (numeros[n] == nroBuscado)
+                {
+                    pos = n;
+                }
+                n++;
+            }
+
+            return pos;
+        }
+        private static double CalcPromedio(int[] vector)
+        {
+            double acum = 0, promedio;
+            for (int i = 0; i < indice; i++)
+            {
+                acum += vector[i];
+            }
+            promedio = acum / indice;
+            return promedio;
+        }
+        private static void Ordenar(int[] vector)
+        {
+            int aux;
+            for (int i = 0; i < indice - 1; i++)
+            {
+                for (int j = i + 1; j < indice; j++)
+                {
+                    if (vector[i] > vector[j])
+                    {
+                        aux = vector[i];
+                        vector[i] = vector[j];
+                        vector[j] = aux;
+                    }
+                }
+            }
+
+        }
+        private int BusqBinaria(int nroBuscado)
+        {
+            int izq, der, medio, ret = -1;
+            bool encontrado = false;
+            izq = 0;
+            der = numeros.Length - 1;
+            do
+            {
+                medio = (izq + der) / 2; //índice del medio
+                if (numeros[medio] == nroBuscado)
+                {
+                    encontrado = true;
+                }
+                else if (numeros[medio] < nroBuscado)
+                {
+                    izq = medio + 1; //Cambio limite izquierdo
+                }
+                else
+                {
+                    der = medio - 1; //Cambio limite derecho
+                }
+            } while ((izq <= der) && (!encontrado));
+            if (encontrado)
+                ret = medio;
+            return ret;
+        }
+        #endregion
+
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
 
@@ -62,48 +135,6 @@ namespace EJ_1
 
         }
 
-        private int BusqSecuencial(int nroBuscado)
-        {
-            int pos = -1, n=0;
-            while(pos == -1 && n < indice)
-            {
-                if (numeros[n] == nroBuscado)
-                {
-                    pos = n;
-                }
-                n++;
-            }
-
-            return pos;
-        }
-        private static double CalcPromedio(int[] vector)
-        {
-            double acum = 0, promedio;
-            for(int i = 0; i < indice; i++)
-            {
-                acum += vector[i];
-            }
-            promedio = acum /indice;
-            return promedio;
-        }
-        private static void Ordenar(int[]vector)
-        {
-            int aux;
-            for(int i = 0; i < indice - 1; i++)
-            {
-                for(int j = i + 1; j < indice; j++)
-                {
-                    if (vector[i] < vector[j])
-                    {
-                        aux = vector[i];
-                        vector[i] = vector[j];
-                        vector[j] = aux;
-                    }
-                }
-            }
-
-        }
-
         private void btnListar_Click(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
@@ -128,6 +159,12 @@ namespace EJ_1
             if(rbBinaria.Checked == true)
             {
                 Ordenar(numeros);
+                if (BusqBinaria(num) != -1)
+                {
+                    MessageBox.Show("Tu numero esta en la posicion: " + BusqBinaria(num));
+                }
+                else { MessageBox.Show("Numero inexistente"); }
+                
             }
         }
     }
